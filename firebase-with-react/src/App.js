@@ -52,6 +52,38 @@ function App() {
   const [playSound9] = useSound();
   const [playSoundz] = useSound("http://localhost:3000/14c181c6-7046-41da-a780-9a83eb788481");
 
+   ///////////////////////////////////MODULATION//////////////////////////////////////////////
+   const soundUrl =
+   "https://firebasestorage.googleapis.com/v0/b/fir-with-react-c4cc3.appspot.com/o/stinger-sound-cmaj7-chord-stab-12534.mp3?alt=media&token=31278a3f-df90-4e2d-9020-b5be9e570f1b";
+   
+  
+  const [playbackRate, setPlaybackRate] = useState(1);
+  
+  
+  const [play] = useSound(soundUrl, {
+    playbackRate,
+    volume: 0.5,
+  });
+  
+  const handleClickQ = () => {
+    setPlaybackRate(1)
+    play();   
+  };
+  const handleClickW = () => {
+    setPlaybackRate(1.1)
+    play() ;
+    
+  };
+  const handleClickE = () => {
+    setPlaybackRate(1.2)
+    play();
+    
+  };
+  const handleClickR = () => {
+    setPlaybackRate(1.3)
+    play();
+    
+  };
   const onKeyPress = useCallback((event) => {
     console.log(`Key pressed: ${event.key}`);
     if (event.key === "1") playSound1();
@@ -61,57 +93,21 @@ function App() {
     if (event.key === "5") playSound5();
     if (event.key === "6") playSound6();
     if (event.key === "7") playSound7();
-    if (event.key === "z") playSoundz();
+    if (event.key === "q") handleClickQ();
+    if (event.key === "w") handleClickW();
+    if (event.key === "e") handleClickE();
+    if (event.key === "r") handleClickR();
   }, []);
-
   useEffect(() => {
     // attach the event listener
     document.addEventListener("keydown", onKeyPress);
-
+    
     // remove the event listener
     return () => {
       // document.removeEventListener('keydown', onKeyPress);
     };
   }, [onKeyPress]);
-  ///////////////////////////////////MODULATION//////////////////////////////////////////////
-  const soundUrl =
-    "https://firebasestorage.googleapis.com/v0/b/fir-with-react-c4cc3.appspot.com/o/stinger-sound-cmaj7-chord-stab-12534.mp3?alt=media&token=31278a3f-df90-4e2d-9020-b5be9e570f1b";
-
-  const [playbackRate, setPlaybackRate] = useState(1);
-
-
-  const [play] = useSound(soundUrl, {
-    playbackRate,
-    volume: 0.5,
-  });
-
-  const handleClick = () => {
- setPlaybackRate( playbackRate )
-    play();
-    //setPlaybackRate(playbackRate)
-   
-  
-  };
-  const [playbackRate1, setPlaybackRate1] = useState(1);
-  const [play1] = useSound(soundUrl, {
-    playbackRate,
-    volume: 0.5,
-  });
-  const handleClick1 = () => {
-    setPlaybackRate1(1.1)
-    play1() ;
-   console.log(playbackRate1)
-  };
-  const handleClick2 = () => {
-    setPlaybackRate(playbackRate + 0.2)
-    play();
-
-  };
-  const handleClick3 = () => {
-    setPlaybackRate(1.3)
-    play();
-    setPlaybackRate(1)
-  };
+ 
   console.log(playbackRate, "pb0")
   var context;
   window.addEventListener("load", init, false);
@@ -192,16 +188,16 @@ function App() {
           </div>
         </section>
         <section className="qrow">
-          <div className="keys" onClick={handleClick}>
+          <div className="keys" onClick={() => handleClickQ()}>
             q
           </div>
-          <div className="keys" onClick={handleClick1}>
+          <div className="keys" onClick={() => handleClickW()}>
             w
           </div>
-          <div className="keys" onClick={handleClick2}>
+          <div className="keys" onClick={() => handleClickE()}>
             e
           </div>
-          <div className="keys" onClick={handleClick3}>
+          <div className="keys" onClick={() => handleClickR()}>
             r
           </div>
           <div className="keys">t</div>
