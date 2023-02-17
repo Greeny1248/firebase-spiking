@@ -4,6 +4,7 @@ import handleSubmit from "./handles/handlesubmit";
 import { collection, getDocs } from "firebase/firestore";
 import { useRef, useState, useEffect, useCallback } from "react";
 import { firestore } from "./firebase_setup/firebase";
+import SynthEngine from "./components/Synth";
 function App() {
   const [todos, setTodos] = useState([]);
   const fetchPost = async () => {
@@ -71,54 +72,38 @@ function App() {
     };
   }, [onKeyPress]);
   ///////////////////////////////////MODULATION//////////////////////////////////////////////
-  var AudioContext = window.AudioContext || window.webkitAudioContext;
+  const soundUrl =    "https://firebasestorage.googleapis.com/v0/b/fir-with-react-c4cc3.appspot.com/o/stinger-sound-cmaj7-chord-stab-12534.mp3?alt=media&token=31278a3f-df90-4e2d-9020-b5be9e570f1b"
 
-  const context = new AudioContext();
-  const masterVolume = context.createGain();
-  masterVolume.connect(context.destination);
+  const [playbackRate, setPlaybackRate] = useState(1);
 
-  const startButton = document.querySelector("#start");
-  const stopButton = document.querySelector("#stop");
-  const volumeControl = document.querySelector("#volume-control");
-  masterVolume.gain.value = 0.1;
-
-  volumeControl.addEventListener("input", changeVolume);
-
-  function changeVolume() {
-    masterVolume.gain.value = this.value;
-  }
-
-  const waveforms = document.getElementsByName("waveform");
-  let waveform;
-
-  function setWaveform() {
-    for (var i = 0; i < waveforms.length; i++) {
-      if (waveforms[i].checked) {
-        waveform = waveforms[i].value;
-      }
-    }
-  }
-
-  startButton.addEventListener("click", function () {
-    const oscillator = context.createOscillator();
-    oscillator.frequency.setValueAtTime(220, 0);
-    oscillator.connect(masterVolume);
-    oscillator.start(0);
-    oscillator.type = waveform;
-    stopButton.addEventListener("click", function () {
-      oscillator.stop(0);
-      delete oscillator;
-    });
-    waveforms.forEach((waveformInput) => {
-      waveformInput.addEventListener("change", function () {
-        setWaveform();
-        oscillator.type = waveform;
-      });
-    });
+  const [play] = useSound(soundUrl, {
+    playbackRate,
+    volume: 0.5,
   });
 
-  return (
-    <div className="App">
+  const handleClick = () => {
+    setPlaybackRate(playbackRate + 0.1);
+    play();
+  };
+  var context;
+  window.addEventListener('load', init, false);
+  function init() {
+      try {
+      context = new AudioContext();
+      }
+      catch(e) {
+      alert('Web Audio API is not supported in this browser');
+      }
+  }
+
+// const audioElement = document.querySelector("audio");
+
+// // pass it into the audio context
+// const track = audioContext.createMediaElementSource(audioElement);
+
+return (
+  <div className="App">
+    {/* <audio href="https://firebasestorage.googleapis.com/v0/b/fir-with-react-c4cc3.appspot.com/o/140-bpm-amen-break-original-processed-6945.mp3?alt=media&token=399fc329-1afe-44c4-9fa6-7ff971544948"  ></audio>  */}
       <section className="keyboard">
         <section className="drums">
           <div className="keys" onClick={() => playSound1()}>
@@ -153,7 +138,7 @@ function App() {
           </div>
         </section>
         <section className="qrow">
-          <div className="keys">q</div>
+          <div className="keys" onClick={handleClick}>q</div>
           <div className="keys">w</div>
           <div className="keys">e</div>
           <div className="keys">r</div>
@@ -187,6 +172,7 @@ function App() {
           <div className="keys">m</div>
         </section>
       </section>
+      {/* <SynthEngine/> */}
       {/* <form onSubmit={submithandler}>
         <input type="text" ref={dataRef} />
         <button type="submit">Save</button>
