@@ -1,3 +1,4 @@
+import { AudioRecorder, useAudioRecorder } from 'react-audio-voice-recorder';
 import useSound from "use-sound";
 import "./App.css";
 import handleSubmit from "./handles/handlesubmit";
@@ -49,7 +50,7 @@ function App() {
   );
   const [playSound8] = useSound();
   const [playSound9] = useSound();
-  const [playSound0] = useSound();
+  const [playSoundz] = useSound("http://localhost:3000/14c181c6-7046-41da-a780-9a83eb788481");
 
   const onKeyPress = useCallback((event) => {
     console.log(`Key pressed: ${event.key}`);
@@ -60,6 +61,7 @@ function App() {
     if (event.key === "5") playSound5();
     if (event.key === "6") playSound6();
     if (event.key === "7") playSound7();
+    if (event.key === "z") playSoundz();
   }, []);
 
   useEffect(() => {
@@ -72,9 +74,11 @@ function App() {
     };
   }, [onKeyPress]);
   ///////////////////////////////////MODULATION//////////////////////////////////////////////
-  const soundUrl =    "https://firebasestorage.googleapis.com/v0/b/fir-with-react-c4cc3.appspot.com/o/stinger-sound-cmaj7-chord-stab-12534.mp3?alt=media&token=31278a3f-df90-4e2d-9020-b5be9e570f1b"
+  const soundUrl =
+    "https://firebasestorage.googleapis.com/v0/b/fir-with-react-c4cc3.appspot.com/o/stinger-sound-cmaj7-chord-stab-12534.mp3?alt=media&token=31278a3f-df90-4e2d-9020-b5be9e570f1b";
 
   const [playbackRate, setPlaybackRate] = useState(1);
+
 
   const [play] = useSound(soundUrl, {
     playbackRate,
@@ -82,28 +86,78 @@ function App() {
   });
 
   const handleClick = () => {
-    setPlaybackRate(playbackRate + 0.1);
+ setPlaybackRate( playbackRate )
     play();
+    //setPlaybackRate(playbackRate)
+   
+  
   };
+  const [playbackRate1, setPlaybackRate1] = useState(1);
+  const [play1] = useSound(soundUrl, {
+    playbackRate,
+    volume: 0.5,
+  });
+  const handleClick1 = () => {
+    setPlaybackRate1(1.1)
+    play1() ;
+   console.log(playbackRate1)
+  };
+  const handleClick2 = () => {
+    setPlaybackRate(playbackRate + 0.2)
+    play();
+
+  };
+  const handleClick3 = () => {
+    setPlaybackRate(1.3)
+    play();
+    setPlaybackRate(1)
+  };
+  console.log(playbackRate, "pb0")
   var context;
-  window.addEventListener('load', init, false);
+  window.addEventListener("load", init, false);
   function init() {
-      try {
+    try {
       context = new AudioContext();
-      }
-      catch(e) {
-      alert('Web Audio API is not supported in this browser');
-      }
+    } catch (e) {
+      alert("Web Audio API is not supported in this browser");
+    }
   }
 
-// const audioElement = document.querySelector("audio");
+  // const audioElement = document.querySelector("audio");
 
-// // pass it into the audio context
-// const track = audioContext.createMediaElementSource(audioElement);
+  // // pass it into the audio context
+  // const track = audioContext.createMediaElementSource(audioElement);
 
-return (
-  <div className="App">
-    {/* <audio href="https://firebasestorage.googleapis.com/v0/b/fir-with-react-c4cc3.appspot.com/o/140-bpm-amen-break-original-processed-6945.mp3?alt=media&token=399fc329-1afe-44c4-9fa6-7ff971544948"  ></audio>  */}
+
+
+
+  const recorderControls = useAudioRecorder();
+  const addAudioElement = (blob) => {
+    const url = URL.createObjectURL(blob);
+    const audio = document.createElement('audio');
+    audio.src = url;
+    audio.controls = true;
+    document.body.appendChild(audio);
+    console.log(audio.src , "audio.src")
+  };
+
+
+
+
+
+  return (
+    <div className="App">
+      {/* <audio href="https://firebasestorage.googleapis.com/v0/b/fir-with-react-c4cc3.appspot.com/o/140-bpm-amen-break-original-processed-6945.mp3?alt=media&token=399fc329-1afe-44c4-9fa6-7ff971544948"  ></audio>  */}
+      
+    <div>
+      <AudioRecorder
+        onRecordingComplete={(blob) => addAudioElement(blob)}
+        recorderControls={recorderControls}
+      />
+      <br />
+      <button onClick={recorderControls.stopRecording}>Stop recording</button>
+      <br />
+    </div>
       <section className="keyboard">
         <section className="drums">
           <div className="keys" onClick={() => playSound1()}>
@@ -133,15 +187,23 @@ return (
           <div className="keys" onClick={() => playSound9()}>
             9
           </div>
-          <div className="keys" onClick={() => playSound0()}>
+          <div className="keys" onClick={() => playSoundz()}>
             0
           </div>
         </section>
         <section className="qrow">
-          <div className="keys" onClick={handleClick}>q</div>
-          <div className="keys">w</div>
-          <div className="keys">e</div>
-          <div className="keys">r</div>
+          <div className="keys" onClick={handleClick}>
+            q
+          </div>
+          <div className="keys" onClick={handleClick1}>
+            w
+          </div>
+          <div className="keys" onClick={handleClick2}>
+            e
+          </div>
+          <div className="keys" onClick={handleClick3}>
+            r
+          </div>
           <div className="keys">t</div>
           <div className="keys">y</div>
           <div className="keys">u</div>
@@ -163,7 +225,7 @@ return (
         </section>
         <br></br>
         <section className="zrow">
-          <div className="keys">z</div>
+          <div className="keys" >z</div>
           <div className="keys">x</div>
           <div className="keys">c</div>
           <div className="keys">v</div>
