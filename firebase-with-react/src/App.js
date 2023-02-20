@@ -6,6 +6,10 @@ import { collection, getDocs } from "firebase/firestore";
 import { useRef, useState, useEffect, useCallback } from "react";
 import { firestore } from "./firebase_setup/firebase";
 import SynthEngine from "./components/Synth";
+import Sequencer from "./sequencer";
+import PlayerProvider from "./player-provider";
+
+
 function App() {
   const [todos, setTodos] = useState([]);
   const fetchPost = async () => {
@@ -141,8 +145,47 @@ function App() {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   return (
     <div className="App">
+          <PlayerProvider>
+      {({ player }) => {
+        if (!player) {
+          return <p>loading....</p>;
+        }
+        return <Sequencer player={player} />;
+      }}
+    </PlayerProvider>
       {/* <audio href="https://firebasestorage.googleapis.com/v0/b/fir-with-react-c4cc3.appspot.com/o/140-bpm-amen-break-original-processed-6945.mp3?alt=media&token=399fc329-1afe-44c4-9fa6-7ff971544948"  ></audio>  */}
       
     <div>
